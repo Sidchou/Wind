@@ -9,11 +9,20 @@ let windGo = false
 let windArray = new Array(9);
 let windDirArray = new Array(9);
 let dataStepper = 0;
-function preload(){
 
+let serial
+function preload(){
   data = loadJSON('datas.json');
 }
 function setup() {
+//serial comm
+serial = new p5.SerialPort(); // make a new instance of  serialport librar
+serial.on('list', printList); // callback function for serialport list event
+serial.on('data', serialEvent); // callback for new data coming in
+serial.list(); // list the serial ports
+serial.open("/dev/tty.usbmodem14601"); // open a port
+//
+
   createCanvas(800, 800);
   noStroke();
   for (j = 20; j < height; j += 20) {
@@ -62,7 +71,7 @@ function draw() {
 
 //graphics
 textSize(32);
-fill(0, 102, 153);
+fill(10, 152, 243);
 try {
   data[dataStepper].recorded_at
 } catch (error) {
@@ -81,6 +90,11 @@ text(clock, 10, 60);
 if (frameCount%120==0){
 //console.log(data[dataStepper].wind_dir)
 addwind(data[dataStepper].wind_dir)
+
+let sendData = data[dataStepper].windspeedmph;
+serial.write(sendData);   // sends as byte unles its a string
+console.log(sendData);
+
 
 dataStepper++;
 
@@ -154,6 +168,17 @@ if (frameCount-windArray[0][0]>1200){
 windArray[0].slice(1);
 
 }
+}
+
+
+function printList(portList) {
+  for (var i = 0; i < portList.length; i++) {
+    // Display the list the console:
+    print(i + " " + portList[i]);
+  }
+}
+function serialEvent() {
+  // this is called when data is recieved
 }
 
 // function mousePressed(){
