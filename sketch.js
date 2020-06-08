@@ -20,7 +20,7 @@ serial = new p5.SerialPort(); // make a new instance of  serialport librar
 serial.on('list', printList); // callback function for serialport list event
 serial.on('data', serialEvent); // callback for new data coming in
 serial.list(); // list the serial ports
-serial.open("/dev/tty.usbmodem14601"); // open a port
+serial.open("/dev/tty.usbmodem14401"); // open a port
 //
 
   createCanvas(800, 800);
@@ -87,7 +87,8 @@ clock = date.toLocaleTimeString()//.slice(0,-3)
 day = date.toLocaleDateString()
 text(day, 10, 30);
 text(clock, 10, 60);
-if (frameCount%120==0){
+//step through data
+if (frameCount%240==0){
 //console.log(data[dataStepper].wind_dir)
 addwind(data[dataStepper].wind_dir)
 
